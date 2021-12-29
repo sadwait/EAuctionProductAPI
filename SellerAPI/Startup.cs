@@ -34,8 +34,11 @@ namespace SellerAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SellerAPI", Version = "v1" });
             });
-            services.AddScoped<ISellerService, SellerService>();
-            services.AddSingleton<ISellerRepository>(InitializeCosmosClientIntance(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult()); 
+
+
+           // services.AddScoped<ISellerService, SellerService>();
+           // services.AddSingleton<ISellerRepository>(InitializeCosmosClientIntance(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
+
         }
 
         private static async Task<ISellerRepository> InitializeCosmosClientIntance(IConfigurationSection configurationSection)
