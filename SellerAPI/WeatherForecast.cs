@@ -1,6 +1,6 @@
 using System;
 
-namespace ProductsAPI
+namespace SellerAPI
 {
     public class WeatherForecast
     {
