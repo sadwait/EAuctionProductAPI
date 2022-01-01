@@ -12,16 +12,6 @@ namespace SellerAPI.Repositories
         public SellerRepository(CosmosClient client, string databaseName, string containerName)
         {
             container = client.GetContainer(databaseName, containerName);
-        }        
-
-        public async Task AddProduct(Product product)
-        {
-            await container.CreateItemAsync(product, new PartitionKey(product.Id));
-        }
-
-        public async Task DeleteProduct(string productId)
-        {
-            await container.DeleteItemAsync<Seller>(productId, new PartitionKey(productId));
         }
 
         public async Task<Product> GetProduct(string productId)
@@ -32,6 +22,16 @@ namespace SellerAPI.Repositories
             IQueryable<Product> queryable = container.GetItemLinqQueryable<Product>(true);
             queryable = queryable.Where(item => item.Id == productId);
             return await Task.FromResult(queryable.ToArray().FirstOrDefault());
+        }
+
+        public async Task AddProduct(Product product)
+        {
+            await container.CreateItemAsync(product, new PartitionKey(product.Id));
+        }
+
+        public async Task DeleteProduct(string productId)
+        {
+            await container.DeleteItemAsync<Seller>(productId, new PartitionKey(productId));
         }
     }
 }
