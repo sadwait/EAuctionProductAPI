@@ -1,13 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SellerAPI.Models
 {
     public class Seller
     {
+        [Required]
+        [StringLength(30, MinimumLength = 5)]
         [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; set; }
 
+        [Required]
+        [StringLength(25, MinimumLength = 3)]
         [JsonProperty(PropertyName = "lastName")]
         public string LastName { get; set; }
 
@@ -23,9 +28,13 @@ namespace SellerAPI.Models
         [JsonProperty(PropertyName = "pin")]
         public string Pin { get; set; }
 
+        [Required]
+        [StringLength(10, MinimumLength = 10)]
         [JsonProperty(PropertyName = "phone")]
         public string Phone { get; set; }
 
+        [Required]
+        [EmailAddress]
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }
     }

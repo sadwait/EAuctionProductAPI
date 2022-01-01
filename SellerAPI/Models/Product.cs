@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SellerAPI.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SellerAPI.Models
 {
@@ -9,7 +10,9 @@ namespace SellerAPI.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "productName")]
+        [Required]
+        [StringLength(30, MinimumLength = 5)]
+        [JsonProperty(PropertyName = "productName")]        
         public string ProductName { get; set; }
 
         [JsonProperty(PropertyName = "shortDescription")]
@@ -22,7 +25,7 @@ namespace SellerAPI.Models
         public string Category { get; set; }
 
         [JsonProperty(PropertyName = "startingPrice")]
-        public string StartingPrice { get; set; }
+        public double StartingPrice { get; set; }
 
         [JsonProperty(PropertyName = "bidEndDate")]
         public DateTime BidEndDate { get; set; }

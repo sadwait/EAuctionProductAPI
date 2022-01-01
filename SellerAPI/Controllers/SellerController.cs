@@ -3,6 +3,8 @@ using SellerAPI.Models;
 using SellerAPI.Services;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,8 +21,8 @@ namespace SellerAPI.Controllers
             _productService = productService;
         }
 
-        [HttpGet("{productId}")]
-        //[Route("show-bids/{productId}")]
+        [HttpGet]
+        [Route("show-bids/{productId}")]
         public async Task<ActionResult> Get(string productId)
         {
             var result = await _productService.GetProduct(productId);
@@ -31,8 +33,18 @@ namespace SellerAPI.Controllers
         [Route("add-product")]
         public async Task<ActionResult> Post([FromBody] Product product)
         {
-            await _productService.AddProduct(product);            
-            return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+            //try
+            //{
+                await _productService.AddProduct(product);
+                //return StatusCode(201);
+                return Created("add-product", product);
+            //}
+            //catch(Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
+           
+            //return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
         }
 
         [HttpDelete("delete/{productId}")]
