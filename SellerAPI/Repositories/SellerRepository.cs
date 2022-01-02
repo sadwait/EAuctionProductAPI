@@ -8,10 +8,11 @@ namespace SellerAPI.Repositories
 {
     public class SellerRepository : ISellerRepository
     {
-        private Container container;
+        private Container container, buyerContainer;
         public SellerRepository(CosmosClient client, string databaseName, string containerName)
         {
             container = client.GetContainer(databaseName, containerName);
+            buyerContainer = client.GetContainer(databaseName, "Buyers");
         }
 
         public async Task<Product> GetProduct(string productId)
@@ -32,6 +33,13 @@ namespace SellerAPI.Repositories
         public async Task DeleteProduct(string productId)
         {
             await container.DeleteItemAsync<Seller>(productId, new PartitionKey(productId));
+        }
+
+        public async Task<List<Bids>> GetAllBidsByProductId(string productId)
+        {
+            IQueryable<Bids> queryable = buyerContainer.GetItemLinqQueryable<Bids>(true);
+            queryable = queryable.Where(item => item.ProductId == productId);
+            return await Task.FromResult(queryable.ToList());
         }
     }
 }

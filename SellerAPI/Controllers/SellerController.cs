@@ -25,7 +25,7 @@ namespace SellerAPI.Controllers
         [Route("show-bids/{productId}")]
         public async Task<ActionResult> Get(string productId)
         {
-            var result = await _productService.GetProduct(productId);
+            var result = await _productService.GetAllBidsWithProductInfo(productId);
             return Ok(result);
         }
 

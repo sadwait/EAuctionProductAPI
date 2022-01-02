@@ -14,9 +14,13 @@ namespace SellerAPI.Services
             _repository = productRepository;
         }
 
-        public async Task<Product> GetProduct(string productId)
+        public async Task<BidsDetails> GetAllBidsWithProductInfo(string productId)
         {
-            return await _repository.GetProduct(productId);
+            var bidsDetails = new BidsDetails();
+            bidsDetails.ProductInfo = await _repository.GetProduct(productId);
+            bidsDetails.BidsList = await _repository.GetAllBidsByProductId(productId);
+
+            return bidsDetails;
         }
 
         public async Task AddProduct(Product product)
