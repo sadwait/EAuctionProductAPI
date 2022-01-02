@@ -44,7 +44,7 @@ namespace SellerAPI
 
             //services.AddScoped<ISellerService, SellerService>();
             //services.AddSingleton<ISellerRepository>(InitializeCosmosClientIntance(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
-
+            services.AddCors(c => { c.AddPolicy("AllowOrigin", option => option.AllowAnyMethod()); });
         }
 
         
@@ -64,7 +64,9 @@ namespace SellerAPI
             app.UseRouting();
 
             app.UseAuthorization();
-           
+
+            app.UseCors(cors=>cors.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseMiddleware<ExceptionMiddleware>();
           
             //app.UseExceptionHandler(appError =>
