@@ -15,6 +15,12 @@ namespace SellerAPI.Repositories
             buyerContainer = client.GetContainer(databaseName, "Buyers");
         }
 
+        public async Task<List<Product>> GetAllProducts()
+        {
+            IQueryable<Product> queryable = container.GetItemLinqQueryable<Product>(true);
+            return await Task.FromResult(queryable.ToList());
+        }
+
         public async Task<Product> GetProduct(string productId)
         {
             // var response=   await container.ReadItemAsync<Product>("863ab1c4-5385-499f-b78e-183c9874ea1f", new PartitionKey(productId));

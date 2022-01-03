@@ -6,6 +6,8 @@ namespace SellerAPI.Repositories
 {
     public interface ISellerRepository
     {
+        Task<List<Product>> GetAllProducts();
+
         Task<Product> GetProduct(string productId);
 
         Task AddProduct(Product product);

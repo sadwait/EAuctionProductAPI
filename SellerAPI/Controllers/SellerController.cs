@@ -21,6 +21,13 @@ namespace SellerAPI.Controllers
             _productService = productService;
         }
 
+        [HttpGet("get-products")]     
+        public async Task<ActionResult> GetProducts()
+        {
+            var result = await _productService.GetAllProducts();
+            return Ok(result);
+        }
+
         [HttpGet]
         [Route("show-bids/{productId}")]
         public async Task<ActionResult> Get(string productId)
@@ -33,18 +40,8 @@ namespace SellerAPI.Controllers
         [Route("add-product")]
         public async Task<ActionResult> Post([FromBody] Product product)
         {
-            //try
-            //{
-                await _productService.AddProduct(product);
-                //return StatusCode(201);
-                return Created("add-product", product);
-            //}
-            //catch(Exception ex)
-            //{
-            //    return BadRequest(ex.Message);
-            //}
-           
-            //return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+            await _productService.AddProduct(product);
+            return Created("add-product", product);
         }
 
         [HttpDelete("delete/{productId}")]

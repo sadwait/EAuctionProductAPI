@@ -2,6 +2,7 @@
 using SellerAPI.Models;
 using SellerAPI.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SellerAPI.Services
@@ -12,6 +13,11 @@ namespace SellerAPI.Services
         public SellerService(ISellerRepository productRepository)
         {
             _repository = productRepository;
+        }
+
+        public async Task<List<Product>> GetAllProducts()
+        {           
+            return  await _repository.GetAllProducts();            
         }
 
         public async Task<BidsDetails> GetAllBidsWithProductInfo(string productId)
