@@ -1,4 +1,5 @@
 ﻿using SellerAPI.Common;
+using SellerAPI.MessageBroker;
 using SellerAPI.Models;
 using SellerAPI.Repositories;
 using System;
@@ -10,13 +11,18 @@ namespace SellerAPI.Services
     public class SellerService : ISellerService
     {
         private readonly ISellerRepository _repository;
-        public SellerService(ISellerRepository productRepository)
+        private readonly IRabbitMqListener _rabbitMqListener;
+
+        public SellerService(ISellerRepository productRepository, IRabbitMqListener rabbitMqListener)
         {
             _repository = productRepository;
+            _rabbitMqListener = rabbitMqListener;
         }
 
         public async Task<List<Product>> GetAllProducts()
-        {           
+        {
+            _rabbitMqListener.Receive();
+
             return  await _repository.GetAllProducts();            
         }
 

@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
 using SellerAPI.Common;
+using SellerAPI.MessageBroker;
 using SellerAPI.Models;
 using SellerAPI.Repositories;
 using SellerAPI.Services;
@@ -42,6 +44,19 @@ namespace SellerAPI
             });
 
 
+            services.AddScoped<IRabbitMqListener, RabbitMqListener>();
+
+            services.AddSingleton(service => {
+                var _config = Configuration.GetSection("RabbitMQ");
+                return new ConnectionFactory() {
+                    HostName = _config["HostName"],
+                    UserName = _config["UserName"],
+                    Password = _config["Password"],
+                    Port = Convert.ToInt32(_config["Port"]),
+                    VirtualHost = _config["VirtualHost"],
+                   }; 
+            });
+
             services.AddScoped<ISellerService, SellerService>();
             services.AddSingleton<ISellerRepository>(InitializeCosmosClientIntance(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
             services.AddCors(c => { c.AddPolicy("AllowOrigin", option => option.AllowAnyMethod()); });
@@ -58,8 +73,6 @@ namespace SellerAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SellerAPI v1"));
             }
-           
-           
 
             app.UseRouting();
 
