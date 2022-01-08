@@ -44,9 +44,10 @@ namespace SellerAPI.MessageBroker
 
             consumer.Received += Consumer_Received;
 
-            channel.BasicConsume(queue: exchangeName,
+            var consumertag= channel.BasicConsume(queue: exchangeName,
                                  autoAck: true,
                                  consumer: consumer);
+            channel.BasicCancel(consumertag);
 
         }
 
