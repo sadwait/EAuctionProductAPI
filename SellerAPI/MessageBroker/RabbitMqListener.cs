@@ -13,6 +13,7 @@ namespace SellerAPI.MessageBroker
         private readonly ConnectionFactory _connectionFactory;
         private IConnection _connection;
         private IModel channel;
+        private string exchangeName = "BidQueue";
 
         public RabbitMqListener(ConnectionFactory connectionFactory)
         {
@@ -29,7 +30,7 @@ namespace SellerAPI.MessageBroker
             {
                 channel = _connection.CreateModel();
 
-                channel.QueueDeclare(queue: "hello",
+                channel.QueueDeclare(queue: exchangeName,
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -43,7 +44,7 @@ namespace SellerAPI.MessageBroker
 
             consumer.Received += Consumer_Received;
 
-            channel.BasicConsume(queue: "hello",
+            channel.BasicConsume(queue: exchangeName,
                                  autoAck: true,
                                  consumer: consumer);
 
