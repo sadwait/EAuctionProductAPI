@@ -1,4 +1,5 @@
-﻿using SellerAPI.Common;
+﻿using Newtonsoft.Json;
+using SellerAPI.Common;
 using SellerAPI.MessageBroker;
 using SellerAPI.Models;
 using SellerAPI.Repositories;
@@ -12,11 +13,13 @@ namespace SellerAPI.Services
     {
         private readonly ISellerRepository _repository;
         private readonly IRabbitMqListener _rabbitMqListener;
+        private readonly ICacheService _cacheService;
 
-        public SellerService(ISellerRepository productRepository, IRabbitMqListener rabbitMqListener)
+        public SellerService(ISellerRepository productRepository, IRabbitMqListener rabbitMqListener, ICacheService cacheService)
         {
             _repository = productRepository;
             _rabbitMqListener = rabbitMqListener;
+            _cacheService = cacheService;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -27,7 +30,15 @@ namespace SellerAPI.Services
         public async Task<BidsDetails> GetAllBidsWithProductInfo(string productId)
         {
             var bidsDetails = new BidsDetails();
-            bidsDetails.ProductInfo = await _repository.GetProduct(productId);
+            //Reading from Redis Cache
+            var prodInfo = await _cacheService.Get<Product>(productId);
+            if (prodInfo == null)
+            {
+                prodInfo = await _repository.GetProduct(productId);
+                if (prodInfo != null)
+                    await _cacheService.Set<Product>(productId, JsonConvert.SerializeObject(prodInfo));
+            }
+            bidsDetails.ProductInfo = prodInfo;
             bidsDetails.BidsList = await _repository.GetAllBidsByProductId(productId);
 
             //Read Rabbitmq queue

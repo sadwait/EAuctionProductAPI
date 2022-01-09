@@ -43,6 +43,12 @@ namespace SellerAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SellerAPI", Version = "v1" });
             });
 
+            services.AddScoped<ICacheService, CacheService>();
+
+            services.AddStackExchangeRedisCache(option =>
+            {
+                option.Configuration = Configuration.GetValue<string>("RedisCacheConString");
+            });
 
             services.AddScoped<IRabbitMqListener, RabbitMqListener>();
 
