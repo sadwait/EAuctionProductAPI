@@ -21,8 +21,6 @@ namespace SellerAPI.Services
 
         public async Task<List<Product>> GetAllProducts()
         {
-            _rabbitMqListener.Receive();
-
             return  await _repository.GetAllProducts();            
         }
 
@@ -31,6 +29,9 @@ namespace SellerAPI.Services
             var bidsDetails = new BidsDetails();
             bidsDetails.ProductInfo = await _repository.GetProduct(productId);
             bidsDetails.BidsList = await _repository.GetAllBidsByProductId(productId);
+
+            //Read Rabbitmq queue
+            _rabbitMqListener.Receive();
 
             return bidsDetails;
         }
