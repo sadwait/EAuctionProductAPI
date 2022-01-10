@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SellerAPI.Models;
 using SellerAPI.Services;
 using System;
@@ -16,14 +17,18 @@ namespace SellerAPI.Controllers
     public class SellerController : ControllerBase
     {
         private readonly ISellerService _productService;
-        public SellerController(ISellerService productService)
+        private readonly ILogger<SellerController> _logger;
+        public SellerController(ISellerService productService, ILogger<SellerController> logger)
         {
             _productService = productService;
+            _logger = logger;
         }
 
         [HttpGet("get-products")]     
         public async Task<ActionResult> GetProducts()
         {
+            _logger.LogInformation("Start fetching Products");
+
             var result = await _productService.GetAllProducts();
             return Ok(result);
         }
@@ -32,6 +37,8 @@ namespace SellerAPI.Controllers
         [Route("show-bids/{productId}")]
         public async Task<ActionResult> Get(string productId)
         {
+            _logger.LogInformation("Start fetching Products by id:" + productId);
+
             var result = await _productService.GetAllBidsWithProductInfo(productId);
             return Ok(result);
         }
