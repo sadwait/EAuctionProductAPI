@@ -18,7 +18,10 @@ namespace SellerAPI.Services
         public async Task<T> Get<T>(string key) where T : class
         {
             var cacheResponse = await _cache.GetStringAsync(key);
-            return JsonConvert.DeserializeObject<T>(cacheResponse);
+            dynamic result = null;
+            if (cacheResponse != null)
+                result = JsonConvert.DeserializeObject<T>(cacheResponse);
+            return result;
         }
 
         public async Task Set<T>(string key, string value) where T : class
